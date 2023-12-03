@@ -1,0 +1,68 @@
+{% extends "user.html" %}
+{% load static %}
+{% block content %}
+
+{% if msg != "" %}
+<script>alert("{{msg}}")</script>
+{% endif %}
+
+<style>
+    .col-md-4 , .col-md-8 , .col-md-6{
+        float: left;
+    }
+</style>
+
+<div class="container-fluid">
+
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Report Complaint</h1>
+    </div>
+
+    <div class="row w-100">
+        <div class="form-panel w-100">
+            <form method="post" enctype="multipart/form-data" action="{% url 'userAddComplaint' %}" onsubmit="return val(this)" action="">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add">
+
+                <div class="col-md-4">
+                        <textarea class="form-control" name="comp" placeholder="Write your complaint..." required></textarea>
+                    <div class="form-group float-right">
+                        <button type="submit" name="submit" class="btn btn-primary mt-4">Send</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="content-panel w-100" style="padding: 10px 10px;">
+
+            <section id="unseen">
+                <table class="table table-bordered table-striped table-condensed" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center;">#</th>
+                            <th>Complaint</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for d in data%}
+                        <tr>
+                            <td style="text-align: center;">{{forloop.counter}}</td>
+                            <td>{{d.complaint}}</td>
+                            <td style="text-align: center; display: flex; justify-content: center;">
+                                <form method="post" action="{% url 'userAddComplaint' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" value="{{d.compid}}" name="id" />
+                                    <input type="hidden" value="delete" name="action" />
+                                    <button class="btn btn-danger m-1" type="submit" name="approve">Remove</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

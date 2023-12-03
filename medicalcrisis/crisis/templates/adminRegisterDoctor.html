@@ -1,0 +1,75 @@
+{% extends "admin.html" %}
+{% load static %}
+{% block content %}
+
+{% if msg != "" %}
+<script>alert("{{msg}}")</script>
+{% endif %}
+
+<style>
+    .col-md-4 , .col-md-8 , .col-md-6{
+        float: left;
+    }
+</style>
+
+<div class="container-fluid">
+
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Register Doctor</h1>
+    </div>
+
+    <div class="row w-100">
+        <div class="form-panel w-100">
+            <form method="post" enctype="multipart/form-data" action="{% url 'adminRegisterDoctor' %}" onsubmit="return val(this)" action="">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="">
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Doctor name</label>
+                        <input type="text" class="form-control" name="name" required/>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Department</label>
+                        <select class="form-control" name="dept" required>
+                            <option value="" selected disabled hidden>- - SELECT - -</option>
+                            {% for depart in department %}
+                            <option value="{{depart.departid}}">{{depart.departname}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Hospital</label>
+                        <select class="form-control" name="hosp" required>
+                            <option value="" selected disabled hidden>- - SELECT - -</option>
+                            {% for d in hospital %}
+                            <option value="{{d.hospid}}">{{d.hospname}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea type="email" class="form-control" name="desc" required></textarea>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group float-right">
+                        <button type="submit" name="submit" class="btn btn-primary mt-4">Register</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

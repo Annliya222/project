@@ -1,0 +1,84 @@
+{% extends "user.html" %}
+{% load static %}
+{% block content %}
+
+{% if msg != "" %}
+<script>alert("{{msg}}")</script>
+{% endif %}
+
+<style>
+    .col-md-4,
+    .col-md-8,
+    .col-md-6 {
+        float: left;
+    }
+</style>
+
+<div class="container-fluid">
+
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Find Hospital</h1>
+    </div>
+
+    <div class="row w-100">
+        <div class="form-panel w-100">
+            <form method="post" enctype="multipart/form-data" action="{% url 'userSearchHospital' %}"
+                onsubmit="return val(this)" action="">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="">
+
+                <div class="col-md-6" style="margin-left: auto; margin-right: auto; float: none;">
+                    <div class="form-group">
+                        <div style="display: flex;">
+                          <!--   <input type="text" class="form-control" name="search" required
+                                placeholder="Search location..." />
+                            <button type="submit" name="submit" class="btn btn-primary"
+                                style="margin-left: -15px;">Submit</button>-->
+                             <select class="form-control" name="search" required>
+                                <option value="" disabled selected>Select a district</option>
+                                <option value="Thiruvananthapuram">Thiruvananthapuram</option>
+                                <option value="Kollam">Kollam</option>
+                                <option value="Pathanamthitta">Pathanamthitta</option>
+                                <option value="Alappuzha">Alappuzha</option>
+                                <option value="Kottayam">Kottayam</option>
+                                <option value="Idukki">Idukki</option>
+                                <option value="Ernakulam">Ernakulam</option>
+                                <option value="Thrissur">Thrissur</option>
+                                <option value="Palakkad">Palakkad</option>
+                                <option value="Malappuram">Malappuram</option>
+                                <option value="Kozhikode">Kozhikode</option>
+                                <option value="Wayanad">Wayanad</option>
+                                <option value="Kannur">Kannur</option>
+                                <option value="Kasaragod">Kasaragod</option>
+                            </select>
+                                <button type="submit" name="submit" class="btn btn-primary" style="margin-left: -15px;">Search</button>  
+                        </div>
+                        
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row w-100">
+        <div class="content-panel w-100" style="padding: 10px 10px;">
+            <section id="unseen">
+                
+                    {% for d in data %}
+                <div class="col-md-4">
+                    <div class="card" style="width: 100%; margin-bottom: 1rem;">
+                        <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
+                        <div class="card-body">
+                          <h5 class="card-title">{{d.hospname}}</h5>
+                          <p class="card-text">{{d.hospdesc}}<br>Located in {{d.location.location}}</p>
+                          <a href="{% url 'userHospitalDetails' %}?id={{d.hospid}}" class="btn btn-primary">View hospital</a>
+                        </div>
+                      </div>
+                </div>
+                    {% endfor %}
+                
+            </section>
+        </div>
+    </div>
+
+    {% endblock %}

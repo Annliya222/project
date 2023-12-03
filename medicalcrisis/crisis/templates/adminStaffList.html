@@ -1,0 +1,128 @@
+{% extends "admin.html" %}
+{% load static %}
+{% block content %}
+
+<style>
+    .col-lg-6 {
+        float: left;
+    }
+
+    .pack-image {
+        height: 60px;
+        width: 60px;
+    }
+</style>
+
+<div class="container-fluid">
+
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Staffs list</h1>
+    </div>
+
+    <div class="row w-100">
+        <div class="content-panel w-100" style="padding: 10px 10px;">
+
+            <section id="unseen">
+                <table class="table table-bordered table-striped table-condensed" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center;">#</th>
+                            <th>Staff</th>
+                            <th>Contact no</th>
+                            <th>Address</th>
+                            <th>Department</th>
+                            <th>Description</th>
+                            <th>Hospital</th>
+                            <th style="text-align: center;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for d in data%}
+                        <tr>
+                            <td style="text-align: center;">{{forloop.counter}}</td>
+                            <td>{{d.staffname}}</td>
+                            <td>{{d.staffphone}}</td>
+                            <td>{{d.staffaddress}}</td>
+                            <td>{{d.staffdepart.departname}}</td>
+                            <td>{{d.staffdesc}}</td>
+                            <td>{{d.hospital.hospname}}</td>
+                            <td style="text-align: center; display: flex; justify-content: center;">
+                                <div>
+                                    <button type="button" class="btn btn-info m-1" data-toggle="modal"
+                                        data-target="#edit-{{d.staffid}}">Edit</button>
+
+                                    <div class="modal fade" id="edit-{{d.staffid}}" tabindex="-1" role="dialog"
+                                        aria-labelledby="exampleModalLabel" aria-hidden="true"
+                                        style="text-align: left;">
+                                        <div class="modal-dialog" role="document">
+                                            <form method="post" action="{% url 'adminEditStaff' %}">
+                                                {% csrf_token %}
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Edit Doctor
+                                                        </h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <input type="hidden" name="id" value="{{d.staffid}}" />
+
+                                                        <div class="form-group">
+                                                            <label>Staff name</label>
+                                                            <input type="text" class="form-control" name="name" value="{{d.staffname}}" required/>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Contact no</label>
+                                                            <input type="text" class="form-control" name="phone" value="{{d.staffphone}}" required/>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Department</label>
+                                                            <select class="form-control" name="dept" required>
+                                                                {% for dept in department %}
+                                                                <option value="{{dept.departid}}" {% if dept.departid == d.staffdepart.departid %} selected {% endif %}>{{dept.departname}}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Description</label>
+                                                            <textarea class="form-control" name="desc" required>{{d.staffdesc}}</textarea>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Address</label>
+                                                            <textarea class="form-control" name="address" required>{{d.staffaddress}}</textarea>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Hospital</label>
+                                                            <select class="form-control" name="hosp" required>
+                                                                {% for h in hospital %}
+                                                                <option value="{{h.hospid}}" {% if h.hospid == d.hospital.hospid %} selected {% endif %}>{{h.hospname}}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-dismiss="modal">Cancel</button>
+                                                        <button type="submit" class="btn btn-success">Update</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <form method="post" action="{% url 'adminStaffList' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" value="{{d.staffid}}" name="id" />
+                                    <button class="btn btn-danger m-1" type="submit" name="approve">Remove</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+        </div>
+        {% endblock %}

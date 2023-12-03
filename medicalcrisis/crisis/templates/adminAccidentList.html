@@ -1,0 +1,107 @@
+{% extends "admin.html" %}
+{% load static %}
+{% block content %}
+
+<style>
+    .col-lg-6 {
+        float: left;
+    }
+
+    .pack-image {
+        height: 60px;
+        width: 60px;
+    }
+</style>
+
+<div class="container-fluid">
+
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Accident Reports</h1>
+    </div>
+
+    <div class="row w-100">
+        <div class="content-panel w-100" style="padding: 10px 10px;">
+
+            <section id="unseen">
+                <table class="table table-bordered table-striped table-condensed" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center;">#</th>
+                            <th>Accident subject</th>
+                            <th>Reported by</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                            <th>Location</th>
+                            <th>Date & Time</th>
+                            <th>Police</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for d in data%}
+                        <tr>
+                            <td style="text-align: center;">{{forloop.counter}}</td>
+                            <td>{{d.accident}}</td>
+                            <td>{{d.user.name}}<br>
+                                {{d.user.phone}}<br>
+                                {{d.user.email}}</td>
+                            <td>{{d.accidenttype}}</td>
+                            <td>{{d.description}}</td>
+                            <td>{{d.location.location}}</td>
+                            <td>{{d.date}} , {{d.time}}</td>
+                            <td style="text-align: center; display: flex; justify-content: center;">
+                                {% if d.police == null %}
+                                <div>
+                                    <button type="button" class="btn btn-info m-1" data-toggle="modal"
+                                        data-target="#edit-{{d.accid}}">Allot police</button>
+
+                                    <div class="modal fade" id="edit-{{d.accid}}" tabindex="-1" role="dialog"
+                                        aria-labelledby="exampleModalLabel" aria-hidden="true"
+                                        style="text-align: left;">
+                                        <div class="modal-dialog" role="document">
+                                            <form method="post" action="{% url 'adminAccidentList' %}">
+                                                {% csrf_token %}
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Allot police
+                                                        </h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <input type="hidden" name="id" value="{{d.accid}}" />
+
+                                                        <div class="form-group">
+                                                            <label>Police</label>
+                                                            <select class="form-control" name="police" required>
+                                                                <option value="" selected disabled hidden>- - SELECT - -</option>
+                                                                {% for p in police %}
+                                                                <option value="{{p.policeid}}">{{p.name}} ({{p.location.location}})</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-dismiss="modal">Cancel</button>
+                                                        <button type="submit" class="btn btn-success">Allot</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% else %}
+                                {{d.police.name}}<br>
+                                {{d.police.phone}}<br>
+                                {{d.police.email}}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+        </div>
+        {% endblock %}

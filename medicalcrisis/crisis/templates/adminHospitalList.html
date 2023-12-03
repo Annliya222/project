@@ -1,0 +1,115 @@
+{% extends "admin.html" %}
+{% load static %}
+{% block content %}
+
+<style>
+    .col-lg-6 {
+        float: left;
+    }
+
+    .pack-image {
+        height: 60px;
+        width: 60px;
+    }
+</style>
+
+<div class="container-fluid">
+
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Hosptitals list</h1>
+    </div>
+
+    <div class="row w-100">
+        <div class="content-panel w-100" style="padding: 10px 10px;">
+
+            <section id="unseen">
+                <table class="table table-bordered table-striped table-condensed" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center;">#</th>
+                            <th>Hospital</th>
+                            <th>Description</th>
+                            <th>Facilities</th>
+                            <th>Location</th>
+                            <th style="text-align: center;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for d in data%}
+                        <tr>
+                            <td style="text-align: center;">{{forloop.counter}}</td>
+                            <td>{{d.hospname}}</td>
+                            <td>{{d.hospdesc}}</td>
+                            <td>{{d.facilities}}</td>
+                            <td>{{d.location.location}}</td>
+                            <td style="text-align: center; display: flex; justify-content: center;">
+                                <div>
+                                    <button type="button" class="btn btn-info m-1" data-toggle="modal"
+                                        data-target="#edit-{{d.hospid}}">Edit</button>
+
+                                    <div class="modal fade" id="edit-{{d.hospid}}" tabindex="-1" role="dialog"
+                                        aria-labelledby="exampleModalLabel" aria-hidden="true"
+                                        style="text-align: left;">
+                                        <div class="modal-dialog" role="document">
+                                            <form method="post" action="{% url 'adminEditHospital' %}">
+                                                {% csrf_token %}
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Edit Hospital
+                                                        </h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <input type="hidden" name="id" value="{{d.hospid}}" />
+
+                                                        <div class="form-group">
+                                                            <label>Hospital name</label>
+                                                            <input class="form-control" type="text" name="name"
+                                                                value="{{d.hospname}}" required />
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Description</label>
+                                                            <textarea class="form-control" name="desc"
+                                                                required>{{d.hospdesc}}</textarea>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Facilities</label>
+                                                            <textarea class="form-control" name="facilities"
+                                                                required>{{d.facilities}}</textarea>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Location</label>
+                                                            <select class="form-control" name="loca" required>
+                                                                {% for l in location %}
+                                                                <option value="{{l.locid}}" {% if l.locid == d.location.locid %} selected {% endif %}>{{l.location}}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-dismiss="modal">Cancel</button>
+                                                        <button type="submit" class="btn btn-success">Update</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <form method="post" action="{% url 'adminHospitalList' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" value="{{d.hospid}}" name="id" />
+                                    <button class="btn btn-danger m-1" type="submit" name="approve">Remove</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+        </div>
+        {% endblock %}

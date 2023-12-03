@@ -1,0 +1,65 @@
+{% extends role %}
+{% load static %}
+{% block content %}
+
+{% if msg != "" %}
+<script>alert("{{msg}}")</script>
+{% endif %}
+
+<script>
+    function chh(v) {
+        if (v.t2.value != v.t3.value) {
+            alert("password missmatch ");
+            v.t3.focus();
+            return false;
+        } else {
+            return true;
+        }
+    }
+</script>
+
+
+
+<div class="container-fluid">
+
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Change Password</h1>
+    </div>
+
+    <div class="row w-100">
+        <div class="col-lg-6" style="margin-left: auto; margin-right: auto;">
+            <form method="post" action="{%url 'privacy' %}" onsubmit="return chh(this); ">
+                {% csrf_token %}
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Current password</label>
+                        <input type="password" class="form-control" placeholder="" name="t1" required />
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>New password</label>
+                        <input type="password" class="form-control" placeholder="" name="t2" required />
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Confirm password</label>
+                        <input type="password" placeholder="" class="form-control" name="t3" required />
+                    </div>
+                </div>
+                
+                <div class="col-md-12 float-left">
+                    <div class="form-group float-right">
+                        <button type="submit" name="submit" class="btn btn-primary mt-4">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

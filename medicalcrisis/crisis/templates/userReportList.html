@@ -1,0 +1,62 @@
+{% extends "user.html" %}
+{% load static %}
+{% block content %}
+
+<style>
+    .col-lg-6 {
+        float: left;
+    }
+
+    .pack-image {
+        height: 60px;
+        width: 60px;
+    }
+</style>
+
+<div class="container-fluid">
+
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Accident Reports</h1>
+    </div>
+
+    <div class="row w-100">
+        <div class="content-panel w-100" style="padding: 10px 10px;">
+
+            <section id="unseen">
+                <table class="table table-bordered table-striped table-condensed" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center;">#</th>
+                            <th>Accident subject</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                            <th>Location</th>
+                            <th>Date & Time</th>
+                            <th>Police</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for d in data%}
+                        <tr>
+                            <td style="text-align: center;">{{forloop.counter}}</td>
+                            <td>{{d.accident}}</td>
+                            <td>{{d.accidenttype}}</td>
+                            <td>{{d.description}}</td>
+                            <td>{{d.location.location}}</td>
+                            <td>{{d.date}} , {{d.time}}</td>
+                            <td>
+                                {% if d.police == null %}
+                                    <span class="text-danger">Waiting</span>
+                                {% else %}
+                                    {{d.police.name}}<br>
+                                    {{d.police.phone}}<br>
+                                    {{d.police.email}}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+        </div>
+        {% endblock %}

@@ -1,0 +1,67 @@
+{% extends "user.html" %}
+{% load static %}
+{% block content %}
+
+{% if msg != "" %}
+<script>alert("{{msg}}")</script>
+{% endif %}
+
+<style>
+    .col-md-4,
+    .col-md-8,
+    .col-md-6 {
+        float: left;
+    }
+</style>
+
+<div class="container-fluid">
+
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Find Police station</h1>
+    </div>
+
+    <div class="row w-100">
+        <div class="form-panel w-100">
+            <form method="post" enctype="multipart/form-data" action="{% url 'userSearchPolice' %}"
+                onsubmit="return val(this)" action="">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="">
+
+                <div class="col-md-6" style="margin-left: auto; margin-right: auto; float: none;">
+                    <div class="form-group">
+                        <div style="display: flex;">
+                            <input type="text" class="form-control" name="search" required
+                                placeholder="Search location..." />
+                            <button type="submit" name="submit" class="btn btn-primary"
+                                style="margin-left: -15px;">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row w-100">
+        <div class="content-panel w-100" style="padding: 10px 10px;">
+            <section id="unseen">
+
+                {% for d in data %}
+                <div class="col-md-4">
+                    <div class="card" style="width: 100%; margin-bottom: 1rem;">
+                        <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
+                        <div class="card-body">
+                            <h5 class="card-title">{{d.name}}</h5>
+                            <p class="card-text">Contact : {{d.phone}}<br>
+                                E-mail : {{d.email}}<br>
+                                {{d.address}}<br>
+                                Located in {{d.location.location}}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+            </section>
+        </div>
+    </div>
+
+    {% endblock %}
